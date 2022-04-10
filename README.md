@@ -9,6 +9,8 @@ It uses the concept of virtualisation so you don't need to worry about the dom o
 
 **Checkout the storybook page [here](https://hdck007.github.io/react-fast-calendar/?path=/story/app-test--app)**
 
+**Checkout the playground [here](https://stackblitz.com/edit/react-ts-pxlgqp)**
+
 
 | **prop**    | **description**                                              | **default-value** | **type** |
 |-------------|--------------------------------------------------------------|-------------------|----------|
