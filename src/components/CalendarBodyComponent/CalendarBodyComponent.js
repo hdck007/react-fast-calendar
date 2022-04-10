@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { FixedSizeGrid as Grid } from 'react-window';
 import { Cell } from '../Cell';
@@ -7,10 +7,18 @@ import { WeekDays } from '../../utils/constants';
 // slyles for the components
 const CalendarWrapper = styled.div`
 	width: 100%;
-	height: 83vh;
-	&::-webkit-scrollbar,
+	position: relative;
+	*{
+		scrollbar-width: thin;
+	}
 	*::-webkit-scrollbar {
-		display: none;
+		width: 5px;
+		background: rgba(0,0,0, 0.05);
+	}
+	
+	*::-webkit-scrollbar-thumb {
+		width: 5px;
+		background: gray; 
 	}
 `;
 
@@ -38,24 +46,39 @@ const HeaderCell = styled.div`
 	font-weight: bold;
 `;
 
+const ScrollToToday = styled.div`
+	background: rgba(0, 0, 0, 0.5);
+	color: white;
+	height: 25px;
+	position: absolute;
+	bottom: 0;
+	padding-top: 5px;
+	text-align: center;
+	width: 100%;
+	cursor: pointer;
+`;
+
 // the main body component
 export function CalendarBodyComponent({
 	setCurrentYear,
 	setCurrentMonth,
 	currentMonth,
 	events,
+	initialDate,
+	currentYear,
 }) {
 	const gridRef = useRef(null);
 	const theme = useTheme();
+	const todaysDate = new Date();
 
 	useEffect(() => {
-		let currentTime = new Date();
-		let currentOffset = currentTime.getTimezoneOffset();
-		let ISTOffset = 330;
-		let ISTTime = new Date(
+		const currentTime = new Date(initialDate);
+		const currentOffset = currentTime.getTimezoneOffset();
+		const ISTOffset = 330;
+		const ISTTime = new Date(
 			currentTime.getTime() + (ISTOffset + currentOffset) * 60000
 		);
-		let weekOffSet = Math.round(
+		const weekOffSet = Math.round(
 			(ISTTime - new Date(1970, 1, 4)) / (7 * 24 * 60 * 60 * 1000)
 		);
 		gridRef.current.scrollToItem({
@@ -63,6 +86,21 @@ export function CalendarBodyComponent({
 			rowIndex: weekOffSet + 7,
 		});
 	}, []);
+
+	const scrollToCurrentDate = useCallback(() => {
+		const currentOffset = todaysDate.getTimezoneOffset();
+		const ISTOffset = 330;
+		const ISTTime = new Date(
+			todaysDate.getTime() + (ISTOffset + currentOffset) * 60000
+		);
+		const weekOffSet = Math.round(
+			(ISTTime - new Date(1970, 1, 4)) / (7 * 24 * 60 * 60 * 1000)
+		);
+		gridRef.current.scrollToItem({
+			columnIndex: 2,
+			rowIndex: weekOffSet + 7,
+		});
+	}, [gridRef, todaysDate]);
 
 	return (
 		<>
@@ -104,6 +142,10 @@ export function CalendarBodyComponent({
 						{Cell}
 					</Grid>
 				</DatesWrapper>
+				{!(
+					todaysDate.getMonth() === currentMonth &&
+					todaysDate.getFullYear() === currentYear
+				) && <ScrollToToday onClick={scrollToCurrentDate}>Today</ScrollToToday>}
 			</CalendarWrapper>
 		</>
 	);

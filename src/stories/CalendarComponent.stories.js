@@ -5,8 +5,6 @@ const stories = storiesOf('App Test', module);
 
 stories.add('App', () => (
 	<CalendarComponent
-		width={600}
-		height={400}
 		events={[
 			{
 				id: 1,
