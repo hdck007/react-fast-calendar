@@ -1,7 +1,7 @@
 {
 	"homepage": "http://hdck007.github.io/react-fast-calendar",
 	"name": "react-fast-calendar",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"description": "A easy to use calendar component for react which can be integrated within seconds.",
 	"main": "dist/index.js",
 	"module": "dist/index.es.js",
